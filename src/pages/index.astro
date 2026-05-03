@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#2563eb">
+<link rel="icon" type="image/x-icon" href="/favicon.ico?v=2">
+<link rel="icon" type="image/png" href="/favicon.png?v=2">
+<title>Phrasly — Make Your AI Writing Completely Undetectable</title>
+<meta name="description" content="Humanize AI-generated text instantly. Bypass Turnitin, GPTZero & more. Trusted by 1M+ writers. Try Phrasly free today at phrasly.co.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --blue:        #2563eb;
+    --blue-light:  #3b82f6;
+    --blue-pale:   #eff6ff;
+    --blue-soft:   #dbeafe;
+    --blue-mid:    #93c5fd;
+    --blue-deep:   #1e40af;
+    --white:       #ffffff;
+    --off-white:   #f8faff;
+    --ink:         #0d1117;
+    --ink-mid:     #374151;
+    --ink-light:   #6b7280;
+    --border:      #e5e7eb;
+    --dark:        #111827;
+    --dark-mid:    #1f2937;
+    --heading:     'Fraunces', serif;
+    --body:        'DM Sans', sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--body); color: var(--ink); background: var(--white); overflow-x: hidden; }
+
+  /* ── COUNTDOWN BAR ── */
+  .countdown-bar {
+    background: var(--blue); padding: .65rem 2rem;
+    display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap;
+  }
+  .countdown-bar p { color: #fff; font-size: .82rem; font-weight: 500; }
+  .countdown-bar p strong { color: var(--blue-soft); }
+  .countdown-units { display: flex; gap: .4rem; align-items: center; }
+  .cdu { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.35); border-radius: 5px; padding: .2rem .5rem; min-width: 38px; text-align: center; }
+  .cdu-num { font-family: var(--heading); font-size: 1rem; font-weight: 700; color: #fff; line-height: 1; display: block; }
+  .cdu-label { font-size: .55rem; color: rgba(255,255,255,0.75); text-transform: uppercase; letter-spacing: .05em; }
+  .cdu-sep { color: rgba(255,255,255,0.6); font-weight: 700; }
+  .cd-btn { background: #fff; color: var(--blue-deep); font-family: var(--body); font-size: .8rem; font-weight: 700; padding: .3rem .9rem; border-radius: 5px; text-decoration: none; transition: opacity .2s; white-space: nowrap; }
+  .cd-btn:hover { opacity: .88; }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255,255,255,0.97); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2.5rem; display: flex; align-items: center; justify-content: space-between; height: 64px;
+  }
+  .nav-logo { font-family: var(--heading); font-size: 1.5rem; font-weight: 700; color: var(--ink); text-decoration: none; display: flex; align-items: center; gap: .4rem; }
+  .nav-logo .dot { width: 8px; height: 8px; background: var(--blue); border-radius: 50%; display: inline-block; margin-bottom: 2px; }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { font-size: .88rem; font-weight: 500; color: var(--ink-mid); text-decoration: none; transition: color .2s; }
+  .nav-links a:hover { color: var(--blue); }
+  .nav-btns { display: flex; gap: .8rem; align-items: center; }
+  .nav-login { font-size: .88rem; font-weight: 500; color: var(--ink-mid); text-decoration: none; }
+  .nav-cta { background: var(--blue); color: #fff; padding: .5rem 1.3rem; border-radius: 7px; font-family: var(--body); font-size: .88rem; font-weight: 600; text-decoration: none; transition: background .2s, transform .15s; display: inline-block; }
+  .nav-cta:hover { background: var(--blue-light); transform: translateY(-1px); }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 80px 2.5rem 70px; text-align: center;
+    background: var(--white); position: relative; overflow: hidden;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(37,99,235,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: .5rem;
+    background: var(--blue-pale); border: 1px solid var(--blue-soft);
+    color: var(--blue-deep); border-radius: 100px;
+    padding: .3rem .9rem; font-size: .76rem; font-weight: 600;
+    letter-spacing: .05em; margin-bottom: 2rem; text-transform: uppercase;
+  }
+  .hero-eyebrow-dot { width: 5px; height: 5px; background: var(--blue); border-radius: 50%; }
+  .hero h1 {
+    font-family: var(--heading); font-weight: 800;
+    font-size: clamp(2.6rem, 6vw, 5rem);
+    color: var(--ink); line-height: 1.08;
+    max-width: 860px; margin: 0 auto 1.5rem;
+    letter-spacing: -0.03em;
+  }
+  .hero h1 em { font-style: italic; color: var(--blue); }
+  .hero > p {
+    font-size: clamp(1rem, 2vw, 1.15rem); color: var(--ink-light);
+    max-width: 520px; margin: 0 auto 2.5rem;
+    font-weight: 400; line-height: 1.7;
+  }
+  .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1rem; }
+  .btn-primary {
+    background: var(--blue); color: #fff;
+    padding: .9rem 2.2rem; border-radius: 9px;
+    font-family: var(--body); font-size: 1rem; font-weight: 600;
+    text-decoration: none; transition: background .2s, transform .15s, box-shadow .2s;
+    display: inline-block; box-shadow: 0 4px 20px rgba(37,99,235,0.3);
+  }
+  .btn-primary:hover { background: var(--blue-light); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(37,99,235,0.4); }
+  .btn-outline {
+    background: #fff; color: var(--ink);
+    padding: .9rem 2.2rem; border-radius: 9px;
+    border: 1.5px solid var(--border);
+    font-family: var(--body); font-size: 1rem; font-weight: 500;
+    text-decoration: none; transition: all .2s; display: inline-block;
+  }
+  .btn-outline:hover { border-color: var(--blue); color: var(--blue); }
+  .hero-note { font-size: .8rem; color: var(--ink-light); }
+
+  /* HERO AVATARS */
+  .hero-social { display: flex; align-items: center; justify-content: center; gap: 1rem; margin: 2rem 0; }
+  .avatar-stack { display: flex; }
+  .avatar-stack img, .avatar { width: 36px; height: 36px; border-radius: 50%; border: 2px solid #fff; margin-left: -8px; background: var(--blue-soft); display: flex; align-items: center; justify-content: center; font-family: var(--heading); font-size: .8rem; font-weight: 700; color: var(--blue-deep); overflow: hidden; }
+  .avatar-stack .avatar:first-child { margin-left: 0; }
+  .hero-social-text { font-size: .85rem; color: var(--ink-mid); }
+  .hero-social-text strong { color: var(--ink); font-weight: 600; }
+  .hero-stars { color: var(--blue); font-size: .85rem; }
+
+  /* ── PRODUCT MOCKUP ── */
+  .mockup-wrap {
+    max-width: 900px; margin: 0 auto 0;
+    background: var(--off-white); border: 1px solid var(--border);
+    border-radius: 16px; overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.04);
+    position: relative; z-index: 1;
+  }
+  .mockup-bar { background: #fff; padding: .65rem 1rem; display: flex; align-items: center; gap: .5rem; border-bottom: 1px solid var(--border); }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-r { background: #ff5f57; } .dot-y { background: #ffbd2e; } .dot-g { background: #28c840; }
+  .mockup-inner { display: grid; grid-template-columns: 1fr 1fr; min-height: 260px; }
+  .mockup-panel { padding: 1.5rem; }
+  .mockup-panel:first-child { border-right: 1px solid var(--border); }
+  .panel-label { font-size: .7rem; font-weight: 600; color: var(--ink-light); text-transform: uppercase; letter-spacing: .08em; margin-bottom: .8rem; display: flex; align-items: center; gap: .4rem; }
+  .panel-label::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--ink-light); display: block; }
+  .panel-label.human::before { background: var(--blue); }
+  .ai-text { font-size: .82rem; color: var(--ink-light); line-height: 1.7; background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: .8rem; }
+  .ai-text mark { background: rgba(239,68,68,0.12); color: #dc2626; border-radius: 3px; padding: 0 2px; }
+  .human-text { font-size: .82rem; color: var(--ink); line-height: 1.7; background: var(--blue-pale); border: 1px solid var(--blue-soft); border-radius: 8px; padding: .8rem; }
+  .human-text mark { background: rgba(37,99,235,0.12); color: var(--blue-deep); border-radius: 3px; padding: 0 2px; }
+  .detector-row { display: flex; align-items: center; justify-content: space-between; padding: .5rem .7rem; border-radius: 7px; background: #fff; border: 1px solid var(--border); margin-top: .6rem; font-size: .75rem; }
+  .detector-name { font-weight: 600; color: var(--ink-mid); }
+  .detector-pass { color: var(--blue); font-weight: 700; display: flex; align-items: center; gap: .3rem; }
+  .detector-fail { color: #dc2626; font-weight: 700; display: flex; align-items: center; gap: .3rem; }
+  .progress-bar { height: 4px; border-radius: 100px; background: var(--border); overflow: hidden; margin-top: .3rem; }
+  .progress-fill { height: 100%; border-radius: 100px; background: var(--blue); }
+
+  /* ── LOGOS ── */
+  .logos-strip { background: var(--white); padding: 2.5rem 2.5rem; border-bottom: 1px solid var(--border); text-align: center; }
+  .logos-strip p { font-size: .78rem; font-weight: 600; color: var(--ink-light); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 1.5rem; }
+  .logos-row { display: flex; align-items: center; justify-content: center; gap: 3rem; flex-wrap: wrap; }
+  .logo-item { font-family: var(--heading); font-size: 1.1rem; font-weight: 700; color: #d1d5db; letter-spacing: -.02em; }
+
+  /* ── STATS ── */
+  .stats-row { display: flex; justify-content: center; gap: 5rem; flex-wrap: wrap; padding: 3rem 2.5rem; border-bottom: 1px solid var(--border); }
+  .stat { text-align: center; }
+  .stat-num { font-family: var(--heading); font-size: 2.8rem; font-weight: 800; color: var(--ink); line-height: 1; margin-bottom: .3rem; }
+  .stat-num span { color: var(--blue); }
+  .stat-label { font-size: .82rem; color: var(--ink-light); }
+
+  /* ── FEATURES ── */
+  .features-wrap { padding: 90px 2.5rem; max-width: 1100px; margin: 0 auto; }
+  .section-tag { font-size: .74rem; font-weight: 700; color: var(--blue); text-transform: uppercase; letter-spacing: .12em; margin-bottom: .7rem; }
+  .section-title { font-family: var(--heading); font-weight: 800; font-size: clamp(1.9rem, 4vw, 2.8rem); color: var(--ink); line-height: 1.15; letter-spacing: -.03em; max-width: 560px; margin-bottom: .8rem; }
+  .section-title em { font-style: italic; color: var(--blue); }
+  .section-sub { font-size: .95rem; color: var(--ink-light); line-height: 1.7; max-width: 500px; margin-bottom: 3.5rem; }
+
+  .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+  .feature-card { background: var(--off-white); border: 1px solid var(--border); border-radius: 14px; padding: 1.8rem; transition: border-color .2s, transform .2s, box-shadow .2s; }
+  .feature-card:hover { border-color: var(--blue-mid); transform: translateY(-3px); box-shadow: 0 8px 28px rgba(37,99,235,0.08); }
+  .feature-card.featured { background: var(--blue-pale); border-color: var(--blue-soft); }
+  .feature-icon { width: 44px; height: 44px; border-radius: 11px; background: #fff; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin-bottom: 1.2rem; }
+  .feature-card.featured .feature-icon { background: var(--blue); border-color: var(--blue); }
+  .feature-card h3 { font-family: var(--heading); font-size: 1.05rem; font-weight: 700; color: var(--ink); margin-bottom: .5rem; }
+  .feature-card p { font-size: .87rem; color: var(--ink-mid); line-height: 1.7; }
+
+  /* ── HOW IT WORKS ── */
+  .hiw-wrap { background: var(--off-white); padding: 90px 2.5rem; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .hiw-inner { max-width: 1100px; margin: 0 auto; }
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 3rem; position: relative; }
+  .steps::before { content: ''; position: absolute; top: 24px; left: 16.66%; right: 16.66%; height: 1px; background: var(--blue-soft); z-index: 0; }
+  .step-card { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 2rem; position: relative; z-index: 1; transition: border-color .2s; }
+  .step-card:hover { border-color: var(--blue-mid); }
+  .step-num { width: 44px; height: 44px; border-radius: 11px; background: var(--blue); color: #fff; font-family: var(--heading); font-weight: 800; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; margin-bottom: 1.2rem; }
+  .step-card h3 { font-family: var(--heading); font-size: 1.05rem; font-weight: 700; color: var(--ink); margin-bottom: .5rem; }
+  .step-card p { font-size: .87rem; color: var(--ink-mid); line-height: 1.7; }
+
+  /* ── DETECTORS ── */
+  .detectors-wrap { padding: 90px 2.5rem; max-width: 1100px; margin: 0 auto; }
+  .detectors-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; margin-top: 3rem; }
+  .detector-list { display: flex; flex-direction: column; gap: .8rem; }
+  .detector-item { display: flex; align-items: center; justify-content: space-between; background: var(--off-white); border: 1px solid var(--border); border-radius: 10px; padding: .9rem 1.2rem; }
+  .detector-item-name { font-size: .9rem; font-weight: 600; color: var(--ink); }
+  .detector-badge { display: flex; align-items: center; gap: .4rem; font-size: .8rem; font-weight: 700; color: var(--blue); background: var(--blue-pale); border: 1px solid var(--blue-soft); padding: .2rem .6rem; border-radius: 100px; }
+  .detectors-visual { background: var(--blue-pale); border: 1px solid var(--blue-soft); border-radius: 16px; padding: 2rem; }
+  .dv-label { font-size: .75rem; font-weight: 600; color: var(--blue-deep); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 1.2rem; }
+  .score-ring { width: 120px; height: 120px; margin: 0 auto 1.2rem; position: relative; }
+  .score-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .score-ring circle { fill: none; stroke-width: 8; }
+  .score-ring .bg { stroke: var(--blue-soft); }
+  .score-ring .fill { stroke: var(--blue); stroke-dasharray: 283; stroke-dashoffset: 28; stroke-linecap: round; }
+  .score-num { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .score-num span { font-family: var(--heading); font-size: 2rem; font-weight: 800; color: var(--blue-deep); line-height: 1; }
+  .score-num small { font-size: .65rem; color: var(--ink-light); text-transform: uppercase; letter-spacing: .05em; }
+  .dv-text { text-align: center; font-size: .85rem; color: var(--blue-deep); font-weight: 500; }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials-wrap { background: var(--dark); padding: 90px 2.5rem; }
+  .testimonials-inner { max-width: 1100px; margin: 0 auto; }
+  .testimonials-wrap .section-tag { color: var(--blue-mid); }
+  .testimonials-wrap .section-title { color: #fff; }
+  .big-quote { font-family: var(--heading); font-size: clamp(1.4rem, 3vw, 2rem); font-style: italic; color: rgba(255,255,255,0.9); line-height: 1.5; max-width: 780px; margin: 2.5rem 0 2rem; }
+  .big-quote-author { display: flex; align-items: center; gap: 1rem; }
+  .bqa-avatar { width: 46px; height: 46px; border-radius: 50%; background: var(--blue); display: flex; align-items: center; justify-content: center; font-family: var(--heading); font-weight: 700; color: #fff; font-size: .9rem; }
+  .bqa-name { font-weight: 600; color: #fff; font-size: .9rem; }
+  .bqa-role { font-size: .78rem; color: rgba(255,255,255,0.5); }
+  .testi-mini-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.2rem; margin-top: 3.5rem; padding-top: 3.5rem; border-top: 1px solid rgba(255,255,255,0.08); }
+  .testi-mini { background: var(--dark-mid); border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; padding: 1.5rem; }
+  .testi-stars { color: var(--blue-light); font-size: .85rem; margin-bottom: .8rem; }
+  .testi-mini blockquote { font-size: .88rem; color: rgba(255,255,255,0.7); line-height: 1.7; margin-bottom: 1rem; font-style: italic; }
+  .testi-mini-author { display: flex; align-items: center; gap: .7rem; }
+  .tma { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--heading); font-size: .75rem; font-weight: 700; color: #fff; }
+  .tma-1 { background: var(--blue); }
+  .tma-2 { background: var(--blue-deep); }
+  .tma-3 { background: #2563eb; }
+  .tma-name { font-size: .82rem; font-weight: 600; color: rgba(255,255,255,0.9); }
+  .tma-role { font-size: .72rem; color: rgba(255,255,255,0.4); }
+
+  /* ── PRICING / LIFETIME ── */
+  .pricing-wrap { padding: 90px 2.5rem; max-width: 1100px; margin: 0 auto; }
+  .pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 3rem; align-items: start; }
+  .price-card { background: var(--off-white); border: 1px solid var(--border); border-radius: 16px; padding: 2.2rem; }
+  .price-card.featured { background: var(--blue); border-color: var(--blue); }
+  .price-tag-label { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-light); margin-bottom: .5rem; }
+  .price-card.featured .price-tag-label { color: rgba(255,255,255,0.7); }
+  .price-tag { font-family: var(--heading); font-size: 3.2rem; font-weight: 800; color: var(--ink); line-height: 1; margin-bottom: .3rem; }
+  .price-card.featured .price-tag { color: #fff; }
+  .price-tag sup { font-size: 1.4rem; vertical-align: super; }
+  .price-old { font-size: .9rem; color: var(--ink-light); text-decoration: line-through; margin-bottom: .3rem; }
+  .price-card.featured .price-old { color: rgba(255,255,255,0.6); }
+  .price-period { font-size: .82rem; color: var(--ink-light); margin-bottom: 1.5rem; }
+  .price-card.featured .price-period { color: rgba(255,255,255,0.7); }
+  .price-divider { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+  .price-card.featured .price-divider { border-color: rgba(255,255,255,0.2); }
+  .price-perks { list-style: none; display: flex; flex-direction: column; gap: .6rem; margin-bottom: 1.8rem; }
+  .price-perks li { display: flex; align-items: center; gap: .6rem; font-size: .88rem; color: var(--ink-mid); }
+  .price-card.featured .price-perks li { color: rgba(255,255,255,0.9); }
+  .price-perks li::before { content: '✓'; color: var(--blue); font-weight: 700; flex-shrink: 0; }
+  .price-card.featured .price-perks li::before { color: var(--blue-soft); }
+  .btn-card { display: block; text-align: center; padding: .95rem; border-radius: 9px; font-family: var(--body); font-size: .95rem; font-weight: 700; text-decoration: none; transition: all .2s; }
+  .btn-card-green { background: var(--blue); color: #fff; box-shadow: 0 4px 20px rgba(37,99,235,0.3); }
+  .btn-card-green:hover { background: var(--blue-light); transform: translateY(-1px); }
+  .btn-card-white { background: #fff; color: var(--blue-deep); }
+  .btn-card-white:hover { background: var(--blue-soft); }
+  .price-best { display: inline-block; background: #fff; color: var(--blue-deep); font-size: .72rem; font-weight: 700; padding: .25rem .7rem; border-radius: 100px; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: .05em; }
+
+  /* ── CTA BANNER ── */
+  .cta-banner { background: var(--off-white); border-top: 1px solid var(--border); padding: 90px 2.5rem; }
+  .cta-inner { max-width: 700px; margin: 0 auto; text-align: center; }
+  .cta-inner h2 { font-family: var(--heading); font-weight: 800; font-size: clamp(2rem, 4.5vw, 3.2rem); color: var(--ink); line-height: 1.1; letter-spacing: -.03em; margin-bottom: 1.2rem; }
+  .cta-inner h2 em { font-style: italic; color: var(--blue); }
+  .cta-inner p { font-size: 1rem; color: var(--ink-light); margin-bottom: 2.5rem; }
+  .cta-fine { font-size: .78rem; color: var(--ink-light); margin-top: 1rem; }
+
+  /* ── FOOTER ── */
+  footer { background: var(--dark); padding: 3.5rem 2.5rem 2rem; }
+  .footer-top { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 2rem; margin-bottom: 2.5rem; }
+  .footer-brand { max-width: 260px; }
+  .footer-logo { font-family: var(--heading); font-size: 1.4rem; font-weight: 700; color: #fff; margin-bottom: .8rem; display: flex; align-items: center; gap: .4rem; }
+  .footer-logo-dot { width: 7px; height: 7px; background: var(--blue); border-radius: 50%; display: inline-block; }
+  .footer-tagline { font-size: .83rem; color: rgba(255,255,255,0.4); line-height: 1.6; }
+  .footer-links { display: flex; gap: 2.5rem; flex-wrap: wrap; }
+  .footer-col h4 { font-size: .78rem; font-weight: 700; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: .08em; margin-bottom: .8rem; }
+  .footer-col a { display: block; font-size: .85rem; color: rgba(255,255,255,0.4); text-decoration: none; margin-bottom: .4rem; transition: color .2s; }
+  .footer-col a:hover { color: rgba(255,255,255,0.85); }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.07); padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+  .footer-copy { font-size: .76rem; color: rgba(255,255,255,0.25); }
+  .footer-disclaimer { font-size: .74rem; color: rgba(255,255,255,0.2); max-width: 500px; line-height: 1.5; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+  .hero-eyebrow { animation: fadeUp .5s ease both; }
+  .hero h1      { animation: fadeUp .55s .08s ease both; }
+  .hero > p     { animation: fadeUp .55s .16s ease both; }
+  .hero-btns    { animation: fadeUp .55s .22s ease both; }
+  .hero-note    { animation: fadeUp .55s .26s ease both; }
+  .hero-social  { animation: fadeUp .55s .3s ease both; }
+  .mockup-wrap  { animation: fadeUp .7s .36s ease both; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .features-grid { grid-template-columns: 1fr 1fr; }
+    .steps { grid-template-columns: 1fr; }
+    .steps::before { display: none; }
+    .detectors-grid { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .testi-mini-grid { grid-template-columns: 1fr; }
+    .footer-top { flex-direction: column; }
+  }
+  @media (max-width: 640px) {
+    .features-grid { grid-template-columns: 1fr; }
+    .mockup-inner { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    .nav-login { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- COUNTDOWN BAR -->
+<div class="countdown-bar">
+  <p><strong>⚡ Limited Offer:</strong> Get Phrasly at a special rate — timer running</p>
+  <div class="countdown-units">
+    <div class="cdu"><span class="cdu-num" id="cd-hours">23</span><span class="cdu-label">hrs</span></div>
+    <span class="cdu-sep">:</span>
+    <div class="cdu"><span class="cdu-num" id="cd-mins">59</span><span class="cdu-label">min</span></div>
+    <span class="cdu-sep">:</span>
+    <div class="cdu"><span class="cdu-num" id="cd-secs">59</span><span class="cdu-label">sec</span></div>
+  </div>
+  <a href="https://phrasly.ai/?via=HALUM28" class="cd-btn" target="_blank" rel="noopener">Grab the Deal →</a>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo"><span class="dot"></span>phrasly</a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#how-it-works">How it works</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+  </ul>
+  <div class="nav-btns">
+    <a href="https://phrasly.ai/?via=HALUM28" class="nav-login" target="_blank" rel="noopener">Log in</a>
+    <a href="https://phrasly.ai/?via=HALUM28" class="nav-cta" target="_blank" rel="noopener">Start Free →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow"><span class="hero-eyebrow-dot"></span> #1 AI Humanizer Tool</div>
+  <h1>Make Your AI Writing <em>Completely</em> Undetectable</h1>
+  <p>Phrasly transforms AI-generated text into natural, human-like writing that bypasses every major AI detector — instantly and effortlessly.</p>
+  <div class="hero-btns">
+    <a href="https://phrasly.ai/?via=HALUM28" class="btn-primary" target="_blank" rel="noopener">Humanize Your Text Free →</a>
+    <a href="#how-it-works" class="btn-outline">See how it works</a>
+  </div>
+  <p class="hero-note">No credit card required · Free plan available · Results in seconds</p>
+  <div class="hero-social">
+    <div class="avatar-stack">
+      <div class="avatar">MK</div>
+      <div class="avatar" style="background:#dbeafe;color:#1e40af">JR</div>
+      <div class="avatar" style="background:#bfdbfe;color:#1e40af">AL</div>
+      <div class="avatar" style="background:#93c5fd;color:#1e40af">+</div>
+    </div>
+    <div class="hero-social-text">
+      <div class="hero-stars">★★★★★</div>
+      <div>Trusted by <strong>1M+ writers</strong> worldwide</div>
+    </div>
+  </div>
+
+  <!-- MOCKUP -->
+  <div class="mockup-wrap">
+    <div class="mockup-bar">
+      <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+    </div>
+    <div class="mockup-inner">
+      <div class="mockup-panel">
+        <div class="panel-label">AI-generated text</div>
+        <div class="ai-text">
+          <mark>It is important to note that</mark> artificial intelligence has fundamentally <mark>transformed the landscape of</mark> content creation. <mark>Furthermore,</mark> the implications of this shift are profound and far-reaching across multiple domains.
+        </div>
+        <div class="detector-row">
+          <span class="detector-name">GPTZero</span>
+          <span class="detector-fail">✗ AI Detected</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:88%;background:#dc2626"></div></div>
+      </div>
+      <div class="mockup-panel">
+        <div class="panel-label human">Humanized by Phrasly</div>
+        <div class="human-text">
+          AI has <mark>quietly reshaped</mark> how we create content — and the shift runs deeper than most people realize. Writers, marketers, and students are all <mark>navigating this new reality</mark> in their own ways.
+        </div>
+        <div class="detector-row">
+          <span class="detector-name">GPTZero</span>
+          <span class="detector-pass">✓ Passes as Human</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:96%"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOGOS -->
+<div class="logos-strip">
+  <p>Bypasses all major AI detectors</p>
+  <div class="logos-row">
+    <span class="logo-item">Turnitin</span>
+    <span class="logo-item">GPTZero</span>
+    <span class="logo-item">Copyleaks</span>
+    <span class="logo-item">Winston AI</span>
+    <span class="logo-item">Originality</span>
+    <span class="logo-item">Quillbot</span>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-row">
+  <div class="stat"><div class="stat-num">1B<span>+</span></div><div class="stat-label">Words Humanized</div></div>
+  <div class="stat"><div class="stat-num">1M<span>+</span></div><div class="stat-label">Active Users</div></div>
+  <div class="stat"><div class="stat-num">99<span>%</span></div><div class="stat-label">Detection Bypass Rate</div></div>
+  <div class="stat"><div class="stat-num">4.8<span>★</span></div><div class="stat-label">Average Rating</div></div>
+</div>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="features-wrap">
+    <div class="section-tag">Everything you need</div>
+    <div class="section-title">One tool to write, <em>humanize,</em> and publish.</div>
+    <div class="section-sub">Phrasly isn't just an AI humanizer — it's a complete writing workspace built for the modern writer.</div>
+    <div class="features-grid">
+      <div class="feature-card featured">
+        <div class="feature-icon">✦</div>
+        <h3>AI Humanizer</h3>
+        <p>Instantly transforms robotic AI text into natural, flowing prose that reads like a human wrote every word.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔍</div>
+        <h3>Built-in AI Detector</h3>
+        <p>Check your content against leading detectors before submitting. 99.8% accuracy — completely free and unlimited.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>AI Content Generator</h3>
+        <p>Generate full articles, essays, and papers from scratch — complete with citations. Sounds human from the first word.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📄</div>
+        <h3>Phrasly Pages Editor</h3>
+        <p>A Google Docs-style workspace where you write, edit, and humanize — all in one place, without switching tabs.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔄</div>
+        <h3>Paraphrasing Tool</h3>
+        <p>Rephrase sentences and paragraphs in your own voice. Multiple modes: standard, fluency, academic, and creative.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">✅</div>
+        <h3>Grammar Checker</h3>
+        <p>Catch every error before you publish. Works alongside humanization so your content is clean and polished every time.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how-it-works" class="hiw-wrap">
+  <div class="hiw-inner">
+    <div class="section-tag">Simple process</div>
+    <div class="section-title">From AI text to <em>undetectable</em> in 3 steps.</div>
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <h3>Paste Your AI Text</h3>
+        <p>Copy your ChatGPT, Gemini, or Claude output and paste it directly into Phrasly. Any length, any topic.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <h3>Choose Humanization Level</h3>
+        <p>Pick your strength — Easy, Medium, or Aggressive. Phrasly rewrites your text to match real human writing patterns.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <h3>Verify & Publish</h3>
+        <p>Run the built-in AI detector to confirm your score, then export to Google Docs or Word. Done in seconds.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DETECTORS -->
+<section>
+  <div class="detectors-wrap">
+    <div class="section-tag">Proven bypass</div>
+    <div class="section-title">Works against <em>every</em> major detector.</div>
+    <div class="detectors-grid">
+      <div class="detector-list">
+        <div class="detector-item"><span class="detector-item-name">Turnitin</span><span class="detector-badge">✓ Bypassed</span></div>
+        <div class="detector-item"><span class="detector-item-name">GPTZero</span><span class="detector-badge">✓ Bypassed</span></div>
+        <div class="detector-item"><span class="detector-item-name">Copyleaks</span><span class="detector-badge">✓ Bypassed</span></div>
+        <div class="detector-item"><span class="detector-item-name">Winston AI</span><span class="detector-badge">✓ Bypassed</span></div>
+        <div class="detector-item"><span class="detector-item-name">Originality.ai</span><span class="detector-badge">✓ Bypassed</span></div>
+        <div class="detector-item"><span class="detector-item-name">Content at Scale</span><span class="detector-badge">✓ Bypassed</span></div>
+      </div>
+      <div class="detectors-visual">
+        <div class="dv-label">Human Score After Phrasly</div>
+        <div class="score-ring">
+          <svg viewBox="0 0 100 100">
+            <circle class="bg" cx="50" cy="50" r="45"/>
+            <circle class="fill" cx="50" cy="50" r="45"/>
+          </svg>
+          <div class="score-num"><span>96%</span><small>Human</small></div>
+        </div>
+        <div class="dv-text">Average human score across all major detectors after Phrasly humanization.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="reviews" class="testimonials-wrap">
+  <div class="testimonials-inner">
+    <div class="section-tag">Real results</div>
+    <div class="section-title">Writers don't look back.</div>
+    <div class="big-quote">"Phrasly is the only tool that actually made my AI content pass Turnitin consistently. I've tried five others — nothing comes close. It's saved my academic career."</div>
+    <div class="big-quote-author">
+      <div class="bqa-avatar">DM</div>
+      <div>
+        <div class="bqa-name">Dariane M.</div>
+        <div class="bqa-role">Graduate Student, University of Toronto</div>
+      </div>
+    </div>
+    <div class="testi-mini-grid">
+      <div class="testi-mini">
+        <div class="testi-stars">★★★★★</div>
+        <blockquote>"I use Phrasly for every blog post I write. My content now ranks on Google AND sounds completely natural. The AI detector built in is a game changer."</blockquote>
+        <div class="testi-mini-author">
+          <div class="tma tma-1">SK</div>
+          <div><div class="tma-name">Sarah K.</div><div class="tma-role">Content Marketing Manager</div></div>
+        </div>
+      </div>
+      <div class="testi-mini">
+        <div class="testi-stars">★★★★★</div>
+        <blockquote>"Phrasly Pages is honestly better than Google Docs for my workflow. I write, humanize, and check — all in one tab. Saves me an hour every single day."</blockquote>
+        <div class="testi-mini-author">
+          <div class="tma tma-2">JR</div>
+          <div><div class="tma-name">James R.</div><div class="tma-role">Freelance Copywriter</div></div>
+        </div>
+      </div>
+      <div class="testi-mini">
+        <div class="testi-stars">★★★★★</div>
+        <blockquote>"The aggressive mode is insane. Literally nothing flags it. I run 30+ articles per month through Phrasly and every single one passes. Worth every penny."</blockquote>
+        <div class="testi-mini-author">
+          <div class="tma tma-3">AL</div>
+          <div><div class="tma-name">Amara L.</div><div class="tma-role">SEO Agency Owner</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="pricing-wrap">
+    <div class="section-tag">Simple pricing</div>
+    <div class="section-title">Start free. <em>Scale</em> when you're ready.</div>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="price-tag-label">Free Plan</div>
+        <div class="price-tag"><sup>$</sup>0</div>
+        <div class="price-period">forever free</div>
+        <hr class="price-divider">
+        <ul class="price-perks">
+          <li>300 words per humanization</li>
+          <li>Basic AI detector access</li>
+          <li>3 humanization modes</li>
+          <li>Export to text</li>
+        </ul>
+        <a href="https://phrasly.ai/?via=HALUM28" class="btn-card btn-card-green" target="_blank" rel="noopener">Start Free →</a>
+      </div>
+      <div class="price-card featured">
+        <div class="price-best">Best Value</div>
+        <div class="price-tag-label">Pro Plan</div>
+        <div class="price-old">$29/month</div>
+        <div class="price-tag"><sup>$</sup>9</div>
+        <div class="price-period">per month — limited offer</div>
+        <hr class="price-divider">
+        <ul class="price-perks">
+          <li>Unlimited word humanization</li>
+          <li>Unlimited AI detector checks</li>
+          <li>All 3 humanization strengths</li>
+          <li>Phrasly Pages document editor</li>
+          <li>AI content generator with citations</li>
+          <li>Google Docs & Word export</li>
+          <li>Priority support</li>
+        </ul>
+        <a href="https://phrasly.ai/?via=HALUM28" class="btn-card btn-card-white" target="_blank" rel="noopener">Get Pro Access →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<div class="cta-banner">
+  <div class="cta-inner">
+    <h2>Stop worrying about AI detection. <em>Start writing freely.</em></h2>
+    <p>Join 1 million+ writers who use Phrasly to publish with confidence every single day.</p>
+    <a href="https://phrasly.ai/?via=HALUM28" class="btn-primary" style="font-size:1.05rem;padding:1rem 2.8rem" target="_blank" rel="noopener">Humanize Your Text Free →</a>
+    <p class="cta-fine">No credit card required · Free plan forever · Setup in under 60 seconds</p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="footer-logo"><span class="footer-logo-dot"></span>phrasly</div>
+      <div class="footer-tagline">The #1 AI humanizer tool trusted by over a million writers, students, and content creators worldwide.</div>
+    </div>
+    <div class="footer-links">
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="#">AI Humanizer</a>
+        <a href="#">AI Detector</a>
+        <a href="#">Paraphraser</a>
+        <a href="#">Pricing</a>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <a href="#">Blog</a>
+        <a href="#">How it works</a>
+        <a href="#">Support</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Ethics</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2025 Phrasly. All rights reserved.</div>
+    <div class="footer-disclaimer">Affiliate disclosure: This page contains affiliate links. I may earn a commission at no extra cost to you. Always use AI tools responsibly and follow your institution's guidelines.</div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var key='phrasly_cd_end_v2', stored=localStorage.getItem(key), end;
+  if(stored){end=parseInt(stored,10);}else{end=Date.now()+(24*60*60*1000);localStorage.setItem(key,end);}
+  function pad(n){return n<10?'0'+n:n;}
+  function tick(){
+    var d=Math.max(0,end-Date.now());
+    document.getElementById('cd-hours').textContent=pad(Math.floor(d/3600000));
+    document.getElementById('cd-mins').textContent=pad(Math.floor((d%3600000)/60000));
+    document.getElementById('cd-secs').textContent=pad(Math.floor((d%60000)/1000));
+    if(d>0)setTimeout(tick,1000);
+  }
+  tick();
+})();
+</script>
+</body>
+</html>
